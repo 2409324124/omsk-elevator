@@ -132,6 +132,34 @@
   - `findings.md`
   - `progress.md`
 
+### 阶段 4.6：审阅小修复
+- **状态：** complete
+- 执行的操作：
+  - 修复 `validate_scenes.py` 未校验 `hidden_constructs` 的问题。
+  - `hidden_constructs` 每个值必须属于 `THETA_KEYS`。
+  - 非法值会报出 scene id 和非法 construct 名。
+  - 未修改 `router.py`、`engine/update.py`，未新增 scene。
+  - 独立提交：`fix: validate hidden constructs`。
+- 创建/修改的文件：
+  - `scripts/validate_scenes.py`
+
+### 阶段 5：结局系统
+- **状态：** complete
+- 执行的操作：
+  - 创建 `engine/ending.py`。
+  - 创建 `data/scenes/endings.json`。
+  - 实现 6 个结局：`safe_exit`、`evidence_escape`、`missing_tourist`、`collaborator`、`sacrifice_stay`、`underground_stranded`。
+  - `surveillance_heat >= 7` 硬触发 `missing_tourist`。
+  - 其他结局使用 PlayerState 特征和 relationship 数值线性打分。
+  - CLI 在 MAX_STEPS 后调用 ending evaluator 并显示结局。
+- 创建/修改的文件：
+  - `engine/ending.py`
+  - `data/scenes/endings.json`
+  - `scripts/run_cli_demo.py`
+  - `task_plan.md`
+  - `findings.md`
+  - `progress.md`
+
 ## 测试结果
 | 测试 | 输入 | 预期结果 | 实际结果 | 状态 |
 |------|------|---------|---------|------|
@@ -155,6 +183,14 @@
 | reference 脚本运行 | `python3 scripts/extract_reference_constructs.py` | 输出不含原题文本的 JSON 摘要 | 输出 IPIP 120、8values 70、四轴权重统计和映射构念 | pass |
 | validate_scenes 语法校验 | `python3 -m py_compile scripts/validate_scenes.py` | 无错误 | 通过 | pass |
 | 交叉审阅读取 | `sed -n '1,260p' docs/reviews/cross_review_2026-05-08.md` | 读取审阅报告 | 已读取总体结论、阻塞项、P0/P1/P2/P3 和 Docker 验证结果 | pass |
+| hidden_constructs fix 编译 | `python3 -m py_compile scripts/validate_scenes.py` | 无错误 | 通过 | pass |
+| hidden_constructs fix 校验 | `python3 scripts/validate_scenes.py data/scenes` | scene 校验通过 | `OK: validated 5 scene(s)` | pass |
+| hidden_constructs fix diff | `git diff --check` | 无空白错误 | 通过 | pass |
+| ending 编译 | `python3 -m py_compile engine/ending.py` | 无错误 | 通过 | pass |
+| ending 相关编译 | `python3 -m py_compile engine/state.py engine/schema.py engine/update.py engine/router.py scripts/validate_scenes.py` | 无错误 | 通过 | pass |
+| ending 数据校验 | `python3 scripts/validate_scenes.py data/scenes` | 校验通过 | `OK: validated 11 scene(s)` | pass |
+| CLI 结局冒烟 | `printf '1\n1\n1\n1\n1\n' \| docker compose run -T --rm omsk-vn-cli` | MAX_STEPS 后输出结局 | 输出“结局：神秘失踪” | pass |
+| hard BE 检查 | Docker 中 `choose_ending_basin(PlayerState(surveillance_heat=7.0))` | 返回 `missing_tourist` | `missing_tourist` | pass |
 
 ## 错误日志
 | 时间戳 | 错误 | 尝试次数 | 解决方案 |
@@ -165,12 +201,13 @@
 | 2026-05-08 | 当前目录不是 git 仓库 | 1 | 执行 `git init -b main` |
 | 2026-05-08 | `unknown flag: --accept-visibility-change-consequences` | 1 | 当前 `gh` 版本不支持该参数，改用 `--visibility public` |
 | 2026-05-08 | `python -m py_compile scripts/validate_scenes.py` 中 `python` 不存在 | 1 | 使用 `python3 -m py_compile scripts/validate_scenes.py` 完成校验 |
+| 2026-05-08 | 宿主机运行 `engine.ending` 时 `ModuleNotFoundError: No module named 'numpy'` | 1 | 使用 Docker 容器运行 runtime 检查 |
 
 ## 五问重启检查
 | 问题 | 答案 |
 |------|------|
-| 我在哪里？ | 阶段 4.5 已完成：交叉审阅结论已同步到规划文件 |
-| 我要去哪里？ | 下一阶段是 `engine/ending.py` 结局系统 |
+| 我在哪里？ | 阶段 5 已完成：结局系统已接入 CLI |
+| 我要去哪里？ | 下一阶段是扩展到 12 个关键选择和补模拟脚本 |
 | 目标是什么？ | 做成 NumPy 自适应 CLI 原型，后续扩展到 12 个关键选择和有限结局收束 |
 | 我学到了什么？ | 见 `findings.md` |
 | 我做了什么？ | 见上方阶段记录 |

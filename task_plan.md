@@ -4,7 +4,7 @@
 将 TNO 鄂木斯克同人视觉小说 Demo 从概念文档推进为可运行、可验证、可扩展的 NumPy 自适应 CLI 原型，并保持渐进式披露与状态驱动路由原则。
 
 ## 当前阶段
-阶段 5
+阶段 6
 
 ## 各阶段
 
@@ -82,14 +82,22 @@
 - [x] 将下一步优先级调整为先补结局系统
 - **状态：** complete
 
+### 阶段 4.6：审阅小修复
+- [x] `validate_scenes.py` 校验 `hidden_constructs`
+- [x] 非法 hidden construct 报出 scene id 和 construct 名
+- [x] 未修改 `router.py`
+- [x] 未修改 `engine/update.py`
+- [x] 未新增 scene
+- **状态：** complete
+
 ### 阶段 5：结局系统
-- [ ] 创建 `engine/ending.py`
-- [ ] 创建 `data/scenes/endings.json`
-- [ ] 用 NumPy 实现 ending basin 线性打分
-- [ ] 支持硬触发 BE 与 softmax 低温收束
-- [ ] CLI 在 MAX_STEPS 后调用 ending evaluator 显示结局文本
-- [ ] 添加最小验证场景或测试入口
-- **状态：** pending
+- [x] 创建 `engine/ending.py`
+- [x] 创建 `data/scenes/endings.json`
+- [x] 用 NumPy 实现 ending basin 线性打分
+- [x] 支持 `surveillance_heat >= 7` 硬触发 `missing_tourist`
+- [x] CLI 在 MAX_STEPS 后调用 ending evaluator 显示结局文本
+- [x] 添加最小验证入口
+- **状态：** complete
 
 ### 阶段 6：扩展到 12 个关键选择
 - [ ] 将 scene 扩展到 12 个关键选择
@@ -124,6 +132,8 @@
 | 8values 只作价值轴参考 | 用户明确要求不要做现实政治倾向测评，也不要复制题目进 scene |
 | reference 提取脚本不输出原题文本 | 参考题库只能辅助构念设计，不能把量表题目转成游戏内容 |
 | 先补 `engine/ending.py` | 交叉审阅指出结局系统是当前阻塞“过程随机 → 结局收束”的最大缺口 |
+| `hidden_constructs` 与 `THETA_KEYS` 对齐 | 避免 scene 拼写错误导致 router 静默按 0 处理构念 |
+| 结局由数值系统决定 | 遵守 LLM 不决定结局、不篡改状态的核心边界 |
 
 ## 遇到的错误
 | 错误 | 尝试次数 | 解决方案 |
@@ -133,6 +143,7 @@
 | `python scripts/run_cli_demo.py` 找不到 `engine` | 1 | 在 CLI 入口将项目根目录加入 `sys.path` |
 | `gh repo edit` 不支持 `--accept-visibility-change-consequences` | 1 | 改用当前版本支持的 `gh repo edit ... --visibility public` |
 | `python -m py_compile scripts/validate_scenes.py` 中 `python` 不存在 | 1 | 记录失败原因，并用 `python3 -m py_compile scripts/validate_scenes.py` 完成等价校验 |
+| 宿主机运行 `engine.ending` 时缺少 NumPy | 1 | 用 Docker 容器执行运行时硬触发检查 |
 
 ## 备注
 - 重大实现前重新读取 `task_plan.md`、`findings.md`、`progress.md`。

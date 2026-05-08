@@ -11,8 +11,9 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from engine.ending import choose_ending, load_endings
 from engine.router import choose_next_scene, get_valid_scenes
-from engine.schema import Choice, Scene
+from engine.schema import Choice, Ending, Scene
 from engine.state import PlayerState
 from engine.update import apply_choice
 from scripts.validate_scenes import load_scene_documents, validate_scenes
@@ -23,6 +24,7 @@ MAX_STEPS = 5
 
 def main() -> int:
     scenes = load_scenes(Path("data/scenes"))
+    endings = load_endings(Path("data/scenes/endings.json"))
     state = PlayerState()
     rng = np.random.default_rng(7)
     forced_scene_id: str | None = None
@@ -47,6 +49,7 @@ def main() -> int:
         print()
 
     print_state_summary(state)
+    print_ending(choose_ending(state, endings))
     return 0
 
 
@@ -57,7 +60,12 @@ def load_scenes(scene_dir: Path) -> list[Scene]:
         for error in errors:
             print(f"ERROR: {error}")
         raise SystemExit(1)
-    return [Scene.from_dict(document) for document in documents]
+    scene_documents = [
+        document
+        for document in documents
+        if "visible_text" in document and "choices" in document
+    ]
+    return [Scene.from_dict(document) for document in scene_documents]
 
 
 def phase_for_choice_index(choice_index: int) -> str:
@@ -127,6 +135,12 @@ def print_state_summary(state: PlayerState) -> None:
     print(f"被注意到的程度：{state.surveillance_heat:.1f}")
     print(f"带走或记住的线索：{state.evidence_count:.1f}")
     print(narrative_tendency(state))
+
+
+def print_ending(ending: Ending) -> None:
+    print()
+    print(f"结局：{ending.title}")
+    print(ending.text)
 
 
 def narrative_tendency(state: PlayerState) -> str:
