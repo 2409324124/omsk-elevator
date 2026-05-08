@@ -99,6 +99,13 @@
 - [x] 添加最小验证入口
 - **状态：** complete
 
+### 阶段 5.1：结局 flags 与回归测试
+- [x] 让 `state.flags` 明确参与普通 ending basin 打分
+- [x] 未配置 flag 默认忽略，不阻塞 scene 增量扩展
+- [x] `load_endings()` 校验 6 个 basin 完整性
+- [x] 新增标准库 `unittest` 覆盖 hard BE、flags bonus、缺失 key 容错和 basin 可选中性
+- **状态：** complete
+
 ### 阶段 6：扩展到 12 个关键选择
 - [ ] 将 scene 扩展到 12 个关键选择
 - [ ] 至少包含 1 个延迟触发 BE
@@ -134,6 +141,7 @@
 | 先补 `engine/ending.py` | 交叉审阅指出结局系统是当前阻塞“过程随机 → 结局收束”的最大缺口 |
 | `hidden_constructs` 与 `THETA_KEYS` 对齐 | 避免 scene 拼写错误导致 router 静默按 0 处理构念 |
 | 结局由数值系统决定 | 遵守 LLM 不决定结局、不篡改状态的核心边界 |
+| flags 作为 ending bonus | flags 表示不可自然消失的事件痕迹，适合作为结局 basin 的附加分 |
 
 ## 遇到的错误
 | 错误 | 尝试次数 | 解决方案 |

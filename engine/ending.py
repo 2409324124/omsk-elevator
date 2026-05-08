@@ -133,12 +133,62 @@ ENDING_BIASES: dict[str, float] = {
     "underground_stranded": -0.3,
 }
 
+ENDING_FLAG_BONUSES: dict[str, dict[str, float]] = {
+    "translated_hard_slogan": {
+        "evidence_escape": 0.3,
+        "missing_tourist": 0.2,
+    },
+    "unauthorized_translation_to_reporter": {
+        "evidence_escape": 0.5,
+        "missing_tourist": 0.9,
+    },
+    "asked_about_underground": {
+        "evidence_escape": 0.4,
+        "missing_tourist": 0.6,
+        "underground_stranded": 0.4,
+    },
+    "took_translation_fragment": {
+        "evidence_escape": 0.8,
+        "missing_tourist": 0.4,
+    },
+    "memorized_translation_fragment": {
+        "evidence_escape": 0.4,
+        "safe_exit": 0.2,
+    },
+    "noted_b1_button": {
+        "evidence_escape": 0.3,
+        "underground_stranded": 0.3,
+    },
+    "copied_behavior_log": {
+        "evidence_escape": 1.0,
+        "missing_tourist": 0.5,
+        "underground_stranded": 0.4,
+    },
+    "softened_official_translation": {
+        "safe_exit": 0.5,
+        "collaborator": 0.3,
+    },
+    "framed_b1_as_fault": {
+        "safe_exit": 0.4,
+        "collaborator": 0.8,
+    },
+    "left_behavior_log": {
+        "safe_exit": 0.5,
+    },
+    "distracted_major_for_reporter": {
+        "evidence_escape": 0.3,
+        "missing_tourist": 0.7,
+    },
+}
+
 
 def load_endings(path: str | Path = "data/scenes/endings.json") -> list[Ending]:
     payload = json.loads(Path(path).read_text(encoding="utf-8"))
     if not isinstance(payload, list):
         raise ValueError("endings.json must contain a list of ending objects")
-    return [Ending.from_dict(item) for item in payload]
+    endings = [Ending.from_dict(item) for item in payload]
+    _validate_endings(endings)
+    return endings
 
 
 def compute_ending_scores(state: PlayerState) -> dict[str, float]:
@@ -147,6 +197,7 @@ def compute_ending_scores(state: PlayerState) -> dict[str, float]:
     for basin in ENDING_BASINS:
         weights = np.array(ENDING_WEIGHTS[basin], dtype=float)
         scores[basin] = float(weights @ features + ENDING_BIASES.get(basin, 0.0))
+    _apply_flag_bonuses(scores, state.flags)
     return scores
 
 
@@ -207,3 +258,28 @@ def _ending_index(endings: list[Ending]) -> dict[str, Ending]:
         basin = ending.basin or ending.id
         index[basin] = ending
     return index
+
+
+def _apply_flag_bonuses(scores: dict[str, float], flags: set[str]) -> None:
+    for flag in flags:
+        for basin, bonus in ENDING_FLAG_BONUSES.get(flag, {}).items():
+            scores[basin] = scores.get(basin, 0.0) + bonus
+
+
+def _validate_endings(endings: list[Ending]) -> None:
+    seen: set[str] = set()
+    duplicates: set[str] = set()
+    for ending in endings:
+        basin = ending.basin or ending.id
+        if basin in seen:
+            duplicates.add(basin)
+        seen.add(basin)
+
+    missing = set(ENDING_BASINS) - seen
+    extra = seen - set(ENDING_BASINS)
+    if duplicates:
+        raise ValueError(f"Duplicate ending basin(s): {', '.join(sorted(duplicates))}")
+    if missing:
+        raise ValueError(f"Missing ending basin(s): {', '.join(sorted(missing))}")
+    if extra:
+        raise ValueError(f"Unknown ending basin(s): {', '.join(sorted(extra))}")

@@ -25,6 +25,8 @@
 - 交叉审阅确认高优先级修复项：`router.py` 里 `_unresolved_thread_score` 硬编码 flag，`validate_scenes.py` 未校验 `hidden_constructs`。
 - `validate_scenes.py` 已补 `hidden_constructs` 值域检查，非法值会报出 scene id 和 construct 名。
 - `engine/ending.py` 已实现 6 个 ending basin；CLI 在 MAX_STEPS 后会显示数值系统选出的结局。
+- `engine/ending.py` 已补 `ENDING_FLAG_BONUSES`，普通结局线性打分现在会纳入 `state.flags`。
+- `load_endings()` 会校验 6 个 ending basin 完整性，缺失、重复或未知 basin 会报错。
 
 ## 技术决策
 | 决策 | 理由 |
@@ -40,6 +42,7 @@
 | 提取脚本只输出元数据和统计 | 防止公开题项直接流入游戏 scene 或玩家可见文本 |
 | 结局系统优先于扩 scene 和模拟 | 没有 ending evaluator 时，basin_pressure 是死数据，模拟也无法验证结局分布 |
 | 结局系统只用 PlayerState 数值 | 防止 LLM 或叙事文本参与结局判定 |
+| ending flags bonus 不要求每个 flag 都配置 | 未配置 flag 代表暂无结局偏置，避免 scene bank 扩展时被 ending 层卡死 |
 
 ## 遇到的问题
 | 问题 | 解决方案 |
@@ -64,6 +67,7 @@
 - 交叉审阅报告：`docs/reviews/cross_review_2026-05-08.md`
 - 结局系统：`engine/ending.py`
 - 结局数据：`data/scenes/endings.json`
+- 结局测试：`tests/test_ending.py`
 - 技能文件：`/home/miku/.codex/skills/planning-with-files-zh/SKILL.md`
 - 技能模板：`/home/miku/.codex/skills/planning-with-files-zh/templates/`
 - 可借鉴远端轮子：`2409324124/adaptive_psych_system` 的 Docker/Compose 和 session/progress 思路；不直接搬 PyTorch IRT。
