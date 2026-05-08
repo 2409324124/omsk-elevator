@@ -1,0 +1,40 @@
+{
+  "source": "8values",
+  "usage": "reference_only_not_game_text",
+  "license": "MIT",
+  "do_not_use_for_real_world_political_profiling": true,
+  "do_not_copy_items_into_scenes": true,
+  "source_axes": {
+    "econ": "economic equality vs markets",
+    "dipl": "nation/sovereignty vs world/internationalism",
+    "govt": "authority/security vs liberty",
+    "scty": "tradition vs progress"
+  },
+  "game_constructs": [
+    {
+      "source_axis": "govt",
+      "game_construct": "authority_compliance",
+      "scene_translation_rule": "把权威/自由冲突转译为玩家是否服从少校、安检、翻译审查和民防演习流程"
+    },
+    {
+      "source_axis": "govt",
+      "game_construct": "security_over_liberty",
+      "scene_translation_rule": "把安全高于自由转译为是否接受监控、搜身、扣押胶卷和统一口径"
+    },
+    {
+      "source_axis": "dipl",
+      "game_construct": "national_loyalty_vs_universalism",
+      "scene_translation_rule": "把国家/世界冲突转译为美国团、本地人、外部世界之间的忠诚排序"
+    },
+    {
+      "source_axis": "scty",
+      "game_construct": "tradition_vs_progress",
+      "scene_translation_rule": "把传统/进步冲突转译为玩家如何理解鄂木斯克的纪律、儿童训练、旧苏联符号和未来战争教育"
+    },
+    {
+      "source_axis": "econ",
+      "game_construct": "scarcity_fairness",
+      "scene_translation_rule": "把经济公平/市场冲突转译为配给、医疗、避难床位和谁有资格活下去的问题"
+    }
+  ]
+}

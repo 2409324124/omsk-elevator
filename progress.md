@@ -68,6 +68,57 @@
   - `findings.md`
   - `progress.md`
 
+### 阶段 4.2：公开心理题项参考层
+- **状态：** complete
+- 执行的操作：
+  - 只使用白名单来源：IPIP / IPIP-NEO 与 `NeuroQuestAi/five-factor-e`。
+  - 创建参考目录，不修改 router/update，不新增剧情 scene。
+  - 下载 IPIP-NEO-120 questions JSON 到 `data/reference/ipip_neo_120/questions_raw.json`。
+  - 创建参考源说明文档，明确只借构念结构，不复制题目进游戏。
+  - 创建构念映射草稿，将 domain/facet 转译为游戏隐藏构念。
+- 创建/修改的文件：
+  - `docs/references/psych_item_sources.md`
+  - `data/reference/ipip_neo_120/questions_raw.json`
+  - `data/reference/ipip_neo_120/construct_mapping_draft.json`
+  - `task_plan.md`
+  - `findings.md`
+  - `progress.md`
+
+### 阶段 4.3：意识形态/政治价值观参考层
+- **状态：** complete
+- 执行的操作：
+  - 只使用 `8values/8values.github.io` 的 `README.md`、`LICENSE`、`questions.js`。
+  - 下载 `questions.js` 到 `data/reference/8values/questions_raw.js`。
+  - 下载 `LICENSE` 到 `data/reference/8values/LICENSE`。
+  - 创建 `SOURCE.md`，记录 raw URL 和使用边界。
+  - 创建 `construct_mapping_draft.json`，将四个轴映射为鄂木斯克场景价值冲突。
+  - 创建 `docs/references/ideology_item_sources.md`，明确不得输出现实政治意识形态。
+  - 确认未修改 `engine/router.py`、`engine/update.py`、`engine/state.py`、`data/scenes/*.json`。
+- 创建/修改的文件：
+  - `data/reference/8values/SOURCE.md`
+  - `data/reference/8values/questions_raw.js`
+  - `data/reference/8values/LICENSE`
+  - `data/reference/8values/construct_mapping_draft.json`
+  - `docs/references/ideology_item_sources.md`
+  - `task_plan.md`
+  - `findings.md`
+  - `progress.md`
+
+### 阶段 4.4：reference-only 提取脚本
+- **状态：** complete
+- 执行的操作：
+  - 创建 `scripts/extract_reference_constructs.py`。
+  - 脚本读取 `data/reference/ipip_neo_120` 与 `data/reference/8values`。
+  - 输出 reference-only JSON 摘要：题数、映射构念、source domains、8values 轴权重统计。
+  - 不输出任何原题文本，并在输出前检查 raw item text 是否泄露。
+  - 校验脚本语法和运行结果。
+  - 将当前 reference 层更新提交并推送到 GitHub。
+- 创建/修改的文件：
+  - `scripts/extract_reference_constructs.py`
+  - `task_plan.md`
+  - `findings.md`
+  - `progress.md`
+
 ## 测试结果
 | 测试 | 输入 | 预期结果 | 实际结果 | 状态 |
 |------|------|---------|---------|------|
@@ -79,6 +130,17 @@
 | CLI 冒烟 | `printf '1\n1\n1\n1\n1\n' \| docker compose run -T --rm omsk-vn-cli` | 跑完 5 步并进入地下 scene | 进入“外宾行为记录表”，输出状态摘要 | pass |
 | GitHub 发布 | `gh repo create omsk-elevator --private --source=. --remote=origin --push` | 创建仓库并推送 main | `https://github.com/2409324124/omsk-elevator` 已创建并跟踪 `origin/main` | pass |
 | GitHub 公开化 | `gh repo edit 2409324124/omsk-elevator --visibility public` | 仓库变为 PUBLIC | `visibility: PUBLIC` | pass |
+| 参考题库下载 | `curl -L --fail .../data/IPIP-NEO/120/questions.json` | 下载 IPIP-NEO-120 questions JSON | 成功下载，包含 120 条 questions | pass |
+| 参考映射 JSON 校验 | `python3` 读取 raw 和 mapping JSON | JSON 可解析 | `questions 120`，`mapping_constructs 8` | pass |
+| 用户指定编译命令 | `python -m py_compile scripts/validate_scenes.py` | 编译通过 | 失败：`python: command not found` | fail |
+| 等价编译命令 | `python3 -m py_compile scripts/validate_scenes.py` | 编译通过 | 通过 | pass |
+| 8values 源可用性 | 读取 raw README/LICENSE/questions.js 和 repo license | 三个白名单文件可访问 | README、LICENSE、questions.js 均可访问，repo license 为 MIT | pass |
+| 8values 下载 | `curl -L --fail` 下载 questions.js 与 LICENSE | 文件下载成功 | `questions_raw.js` 与 `LICENSE` 已保存 | pass |
+| 8values 映射校验 | `python3` 读取 mapping、questions、LICENSE | JSON 合法且 license/questions 可识别 | `game_constructs 5`，`questions_has_array True`，`license_has_mit True` | pass |
+| 禁止修改检查 | `git diff --name-only -- engine/router.py engine/update.py engine/state.py data/scenes` | 无输出 | 无输出 | pass |
+| reference 脚本语法校验 | `python3 -m py_compile scripts/extract_reference_constructs.py` | 无错误 | 通过 | pass |
+| reference 脚本运行 | `python3 scripts/extract_reference_constructs.py` | 输出不含原题文本的 JSON 摘要 | 输出 IPIP 120、8values 70、四轴权重统计和映射构念 | pass |
+| validate_scenes 语法校验 | `python3 -m py_compile scripts/validate_scenes.py` | 无错误 | 通过 | pass |
 
 ## 错误日志
 | 时间戳 | 错误 | 尝试次数 | 解决方案 |
@@ -88,11 +150,12 @@
 | 2026-05-08 | CLI 入口 `ModuleNotFoundError: No module named 'engine'` | 1 | 在 CLI 入口加入项目根目录到 `sys.path` |
 | 2026-05-08 | 当前目录不是 git 仓库 | 1 | 执行 `git init -b main` |
 | 2026-05-08 | `unknown flag: --accept-visibility-change-consequences` | 1 | 当前 `gh` 版本不支持该参数，改用 `--visibility public` |
+| 2026-05-08 | `python -m py_compile scripts/validate_scenes.py` 中 `python` 不存在 | 1 | 使用 `python3 -m py_compile scripts/validate_scenes.py` 完成校验 |
 
 ## 五问重启检查
 | 问题 | 答案 |
 |------|------|
-| 我在哪里？ | 阶段 4.1 已完成：GitHub 公开仓库已创建并推送 |
+| 我在哪里？ | 阶段 4.4 已完成：reference-only 提取脚本已创建并准备提交 |
 | 我要去哪里？ | 下一阶段是 `engine/ending.py` 结局系统 |
 | 目标是什么？ | 做成 NumPy 自适应 CLI 原型，后续扩展到 12 个关键选择和有限结局收束 |
 | 我学到了什么？ | 见 `findings.md` |

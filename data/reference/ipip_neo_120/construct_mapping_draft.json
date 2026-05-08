@@ -1,0 +1,72 @@
+{
+  "source": "IPIP-NEO-120",
+  "usage": "reference_only_not_game_text",
+  "source_urls": [
+    "https://ipip.ori.org/30FacetNEO-PI-RItems.htm",
+    "https://raw.githubusercontent.com/NeuroQuestAi/five-factor-e/main/data/IPIP-NEO/120/questions.json"
+  ],
+  "rules": {
+    "do_not_copy_items_into_scenes": true,
+    "do_not_use_for_clinical_diagnosis": true,
+    "do_not_report_personality_disorders": true,
+    "prefer_scene_pressure_tests_over_questionnaire_text": true
+  },
+  "constructs": [
+    {
+      "source_domain": "Agreeableness",
+      "source_facet": "Sympathy",
+      "game_construct": "local_empathy",
+      "scene_translation_rule": "把同情弱者转译为是否愿意为本地求助者承担风险。",
+      "do_not_copy_items": true
+    },
+    {
+      "source_domain": "Agreeableness",
+      "source_facet": "Altruism",
+      "game_construct": "group_safety",
+      "scene_translation_rule": "把助人倾向转译为是否优先保护美国团整体安全，而不是单独追求真相。",
+      "do_not_copy_items": true
+    },
+    {
+      "source_domain": "Conscientiousness",
+      "source_facet": "Dutifulness",
+      "game_construct": "authority_compliance",
+      "scene_translation_rule": "把责任和守规倾向转译为是否遵守官方参访流程与导游修正。",
+      "do_not_copy_items": true
+    },
+    {
+      "source_domain": "Conscientiousness",
+      "source_facet": "Cautiousness",
+      "game_construct": "self_preservation",
+      "scene_translation_rule": "把谨慎倾向转译为是否避免留下证据、减少异常提问、保护自身可离开性。",
+      "do_not_copy_items": true
+    },
+    {
+      "source_domain": "Openness",
+      "source_facet": "Intellect",
+      "game_construct": "truth_seek",
+      "scene_translation_rule": "把求知与理解复杂信息的倾向转译为是否持续追查翻译偏差、地下暗示与文件线索。",
+      "do_not_copy_items": true
+    },
+    {
+      "source_domain": "Openness",
+      "source_facet": "Adventurousness",
+      "game_construct": "risk_tolerance",
+      "scene_translation_rule": "把探索新情境的倾向转译为是否愿意接近禁区、携带证据或进行非授权沟通。",
+      "do_not_copy_items": true
+    },
+    {
+      "source_domain": "Neuroticism",
+      "source_facet": "Anxiety",
+      "game_construct": "self_preservation",
+      "scene_translation_rule": "不表现为诊断，只转译为压力下对暴露、失踪和连累他人的风险敏感度。",
+      "do_not_copy_items": true
+    },
+    {
+      "source_domain": "Extraversion",
+      "source_facet": "Assertiveness",
+      "game_construct": "control_strategy",
+      "scene_translation_rule": "把主动表达和影响他人的倾向转译为是否试图控制翻译场面、记者行动或团队口径。",
+      "do_not_copy_items": true
+    }
+  ]
+}

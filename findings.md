@@ -14,6 +14,12 @@
 - 已新增最小 scene 数据：`data/scenes/demo_intro.json`，包含 5 个 scene，并能进入地下动态 scene。
 - 已新增容器运行链路：`requirements.txt`、`Dockerfile`、`docker-compose.yml`、`.dockerignore`。
 - 宿主机有 Docker / Docker Compose，但宿主 Python 环境缺少 NumPy；容器运行是当前可靠路径。
+- IPIP 官方站点提供 Johnson IPIP-NEO-120 条目页，并说明其为 120-item public domain inventory。
+- `NeuroQuestAi/five-factor-e` 提供 IPIP-NEO-120 的 `questions.json`，项目许可证为 MIT。
+- 已下载 120 条 questions raw JSON 到 `data/reference/ipip_neo_120/questions_raw.json`，仅作参考层，不进入游戏 scene。
+- 8values 仓库 `8values/8values.github.io` 标识为 MIT License；本项目只保存白名单文件 `questions.js` 与 `LICENSE` 的参考副本。
+- 8values 只用于参考 `econ/dipl/govt/scty` 四个价值轴，不用于现实政治画像或政治意识形态输出。
+- `scripts/extract_reference_constructs.py` 可输出 reference-only 摘要：IPIP 题数、映射构念、8values 轴权重统计；脚本会检查输出中不得包含 raw item text。
 
 ## 技术决策
 | 决策 | 理由 |
@@ -24,6 +30,9 @@
 | `router` 使用 softmax 抽样 | 符合过程随机、后期收束的路线 |
 | `validate_scenes.py` 先做基础校验 | 当前阶段避免过度 schema 收紧，给 scene bank 扩展留空间 |
 | Docker 镜像只安装 NumPy | 避免 PyTorch 轮子把原型复杂度带偏 |
+| IPIP-NEO-120 只作构念参考 | 避免凭空编题库，同时避免把公开量表原题直接变成游戏文本 |
+| 8values 只作价值轴参考 | 后续把政治价值冲突改造成鄂木斯克场景压力测试，不输出现实政治标签 |
+| 提取脚本只输出元数据和统计 | 防止公开题项直接流入游戏 scene 或玩家可见文本 |
 
 ## 遇到的问题
 | 问题 | 解决方案 |
@@ -36,6 +45,15 @@
 ## 资源
 - 本项目规划文件：`task_plan.md`、`findings.md`、`progress.md`
 - GitHub 公开仓库：`https://github.com/2409324124/omsk-elevator`
+- IPIP 官方：`https://ipip.ori.org/`
+- Johnson IPIP-NEO-120：`https://ipip.ori.org/30FacetNEO-PI-RItems.htm`
+- Five Factor E：`https://github.com/NeuroQuestAi/five-factor-e`
+- IPIP-NEO-120 questions JSON：`https://raw.githubusercontent.com/NeuroQuestAi/five-factor-e/main/data/IPIP-NEO/120/questions.json`
+- 8values 仓库：`https://github.com/8values/8values.github.io`
+- 8values README：`https://github.com/8values/8values.github.io/blob/master/README.md`
+- 8values LICENSE：`https://github.com/8values/8values.github.io/blob/master/LICENSE`
+- 8values questions.js：`https://github.com/8values/8values.github.io/blob/master/questions.js`
+- Reference-only 提取脚本：`scripts/extract_reference_constructs.py`
 - 技能文件：`/home/miku/.codex/skills/planning-with-files-zh/SKILL.md`
 - 技能模板：`/home/miku/.codex/skills/planning-with-files-zh/templates/`
 - 可借鉴远端轮子：`2409324124/adaptive_psych_system` 的 Docker/Compose 和 session/progress 思路；不直接搬 PyTorch IRT。
