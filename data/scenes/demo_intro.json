@@ -1,0 +1,184 @@
+[
+  {
+    "id": "surface_slogan_translation_01",
+    "act": 1,
+    "location": "1F_lobby",
+    "phase": "surface_fixed",
+    "title": "大厅标语",
+    "visible_text": "大厅的墙被重新粉刷过。娜塔莉娅微笑着向美国团介绍：'这里写的是，团结帮助我们重建。' 你抬头看见俄文原句：'纪律带来生存。'",
+    "hidden_constructs": ["truth_seek", "authority_compliance", "self_preservation", "risk_tolerance"],
+    "preconditions": {"min_choice_index": 0, "max_choice_index": 0},
+    "choices": [
+      {
+        "id": "translate_faithfully",
+        "text": "忠实翻译：纪律带来生存。",
+        "effects": {"truth_seek": 0.6, "authority_compliance": -0.2},
+        "heat_delta": 1.0,
+        "relationship_effects": {"major_suspicion": 0.5},
+        "flags_add": ["translated_hard_slogan"]
+      },
+      {
+        "id": "soften_translation",
+        "text": "美化翻译：团结帮助我们重建。",
+        "effects": {"authority_compliance": 0.5, "self_preservation": 0.3, "truth_seek": -0.3},
+        "heat_delta": -0.5,
+        "flags_add": ["softened_official_translation"]
+      },
+      {
+        "id": "tell_reporter_harder_slogan",
+        "text": "私下告诉记者：这里的标语比她说的更硬。",
+        "effects": {"truth_seek": 0.8, "risk_tolerance": 0.6, "authority_compliance": -0.5},
+        "heat_delta": 2.0,
+        "relationship_effects": {"reporter_trust": 1.0, "major_suspicion": 1.0},
+        "flags_add": ["unauthorized_translation_to_reporter"],
+        "basin_pressure": {"missing_tourist": 1.5, "evidence_escape": 0.5}
+      }
+    ],
+    "tags": ["translation", "surface", "first_signal"]
+  },
+  {
+    "id": "surface_reporter_photo_01",
+    "act": 1,
+    "location": "2F_exhibition_hall",
+    "phase": "surface_fixed",
+    "title": "记者的相机",
+    "visible_text": "展柜里放着几张民防演习照片。记者把相机举到胸前。少校没有看她，他在看你。",
+    "hidden_constructs": ["risk_tolerance", "self_preservation", "control_strategy", "group_safety"],
+    "preconditions": {"min_choice_index": 1, "max_choice_index": 1},
+    "choices": [
+      {
+        "id": "ask_photo_permission",
+        "text": "替记者询问能否拍照。",
+        "effects": {"group_safety": 0.4, "authority_compliance": 0.2},
+        "heat_delta": 0.5,
+        "relationship_effects": {"reporter_trust": 0.5}
+      },
+      {
+        "id": "warn_no_photo",
+        "text": "低声劝她先别拍。",
+        "effects": {"self_preservation": 0.5, "group_safety": 0.3},
+        "relationship_effects": {"reporter_trust": -0.2}
+      },
+      {
+        "id": "distract_major",
+        "text": "用一个翻译问题转移少校注意。",
+        "effects": {"control_strategy": 0.6, "risk_tolerance": 0.3},
+        "heat_delta": 1.0,
+        "relationship_effects": {"reporter_trust": 0.6, "major_suspicion": 0.5},
+        "flags_add": ["distracted_major_for_reporter"]
+      }
+    ],
+    "tags": ["surface", "reporter", "monitoring"]
+  },
+  {
+    "id": "translation_script_missing_page_01",
+    "act": 1,
+    "location": "2F_rest_room",
+    "phase": "surface_fixed",
+    "title": "缺页的翻译稿",
+    "visible_text": "休息室桌上放着一叠官方翻译稿。最后一页被撕掉，只剩半句：'如外宾提及地下设施，不应……'",
+    "hidden_constructs": ["truth_seek", "risk_tolerance", "self_preservation", "control_strategy"],
+    "preconditions": {"min_choice_index": 2, "max_choice_index": 2},
+    "choices": [
+      {
+        "id": "take_page_fragment",
+        "text": "把残页夹进自己的笔记本。",
+        "effects": {"truth_seek": 0.6, "risk_tolerance": 0.5},
+        "heat_delta": 1.5,
+        "evidence_delta": 1.0,
+        "flags_add": ["took_translation_fragment"]
+      },
+      {
+        "id": "memorize_and_leave",
+        "text": "记住内容，把稿子放回原位。",
+        "effects": {"truth_seek": 0.4, "self_preservation": 0.4},
+        "heat_delta": 0.3,
+        "evidence_delta": 0.5,
+        "flags_add": ["memorized_translation_fragment"]
+      },
+      {
+        "id": "ask_natalia_about_script",
+        "text": "问娜塔莉娅：地下设施是什么意思？",
+        "effects": {"truth_seek": 0.5, "authority_compliance": -0.2, "risk_tolerance": 0.4},
+        "heat_delta": 2.0,
+        "relationship_effects": {"guide_trust": -0.5, "major_suspicion": 1.0},
+        "flags_add": ["asked_about_underground"]
+      }
+    ],
+    "tags": ["translation", "clue", "underground_hint", "evidence"]
+  },
+  {
+    "id": "elevator_b1_button_01",
+    "act": 2,
+    "location": "elevator",
+    "phase": "early_adaptive",
+    "title": "B1 按钮",
+    "visible_text": "电梯本该上行，却短暂停住。面板最下方，一个被磨花的 B1 按钮亮了一瞬，又暗下去。",
+    "hidden_constructs": ["truth_seek", "self_preservation", "control_strategy"],
+    "preconditions": {"min_choice_index": 3, "max_choice_index": 3},
+    "choices": [
+      {
+        "id": "ask_about_b1",
+        "text": "问导游：B1 是什么？",
+        "effects": {"truth_seek": 0.5, "risk_tolerance": 0.3},
+        "heat_delta": 1.0,
+        "flags_add": ["saw_b1_button", "asked_about_b1"]
+      },
+      {
+        "id": "ignore_b1",
+        "text": "当没看见。",
+        "effects": {"self_preservation": 0.5, "authority_compliance": 0.2},
+        "flags_add": ["saw_b1_button"]
+      },
+      {
+        "id": "note_b1",
+        "text": "把 B1 记在笔记边角。",
+        "effects": {"truth_seek": 0.4, "control_strategy": 0.4},
+        "heat_delta": 0.5,
+        "evidence_delta": 0.5,
+        "flags_add": ["saw_b1_button", "noted_b1_button"],
+        "force_next_if": {"evidence_count_gte": 1.0, "scene": "b1_behavior_log_01"}
+      }
+    ],
+    "tags": ["elevator", "underground_hint"]
+  },
+  {
+    "id": "b1_behavior_log_01",
+    "act": 2,
+    "location": "B1_service_corridor",
+    "phase": "underground_router",
+    "title": "外宾行为记录表",
+    "visible_text": "演习广播响起后，电梯停在地下。走廊柜门没有关严，里面露出一张表格：姓名、座位、提问内容、翻译偏差。最后一栏还空着。",
+    "hidden_constructs": ["truth_seek", "self_preservation", "local_empathy", "control_strategy"],
+    "preconditions": {
+      "min_choice_index": 4,
+      "required_flags_any": ["saw_b1_button", "noted_b1_button", "asked_about_underground"]
+    },
+    "choices": [
+      {
+        "id": "copy_log_names",
+        "text": "抄下表格里能看清的名字。",
+        "effects": {"truth_seek": 0.6, "risk_tolerance": 0.4},
+        "heat_delta": 1.5,
+        "evidence_delta": 1.0,
+        "flags_add": ["copied_behavior_log"],
+        "basin_pressure": {"evidence_escape": 1.0, "missing_tourist": 0.8}
+      },
+      {
+        "id": "close_cabinet",
+        "text": "把柜门轻轻合上，提醒大家别停留。",
+        "effects": {"self_preservation": 0.6, "group_safety": 0.5},
+        "heat_delta": 0.2,
+        "flags_add": ["left_behavior_log"]
+      },
+      {
+        "id": "tell_group_elevator_fault",
+        "text": "告诉美国团这只是电梯故障，先跟着导游走。",
+        "effects": {"authority_compliance": 0.5, "group_safety": 0.4, "truth_seek": -0.2},
+        "relationship_effects": {"guide_trust": 0.4},
+        "flags_add": ["framed_b1_as_fault"]
+      }
+    ],
+    "tags": ["underground", "monitoring", "evidence"]
+  }
+]

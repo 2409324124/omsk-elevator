@@ -1,0 +1,12 @@
+services:
+  omsk-vn-cli:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: omsk-vn-cli:numpy
+    working_dir: /app
+    volumes:
+      - .:/app
+    command: python scripts/run_cli_demo.py
+    stdin_open: true
+    tty: true
