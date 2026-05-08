@@ -41,7 +41,8 @@
 - [x] 初始化本地 git 仓库
 - [x] 创建 `.gitignore`
 - [x] 提交当前 CLI 原型
-- [x] 创建 GitHub 私有仓库 `2409324124/omsk-elevator`
+- [x] 创建 GitHub 仓库 `2409324124/omsk-elevator`
+- [x] 将仓库可见性改为 public
 - [x] 推送 `main` 分支并设置 upstream
 - **状态：** complete
 
@@ -79,6 +80,7 @@
 | CLI 先跑 5 步 | 足够验证 scene 加载、选择、状态更新、动态地下 scene 与 Docker 链路 |
 | Docker 默认运行 CLI | 宿主机缺 NumPy，容器能固定依赖并降低环境差异 |
 | 状态摘要叙事化输出 | 避免心理诊断式标签，符合项目心理学边界 |
+| GitHub 仓库设为 public | 用户明确要求公开仓库，便于外部查看与协作 |
 
 ## 遇到的错误
 | 错误 | 尝试次数 | 解决方案 |
@@ -86,6 +88,7 @@
 | 宿主机 `python` 不存在 | 1 | 使用 `python3` |
 | 宿主机 Python 缺少 NumPy | 1 | 用 Docker 安装并运行 NumPy 依赖 |
 | `python scripts/run_cli_demo.py` 找不到 `engine` | 1 | 在 CLI 入口将项目根目录加入 `sys.path` |
+| `gh repo edit` 不支持 `--accept-visibility-change-consequences` | 1 | 改用当前版本支持的 `gh repo edit ... --visibility public` |
 
 ## 备注
 - 重大实现前重新读取 `task_plan.md`、`findings.md`、`progress.md`。

@@ -35,7 +35,7 @@
 
 ## 资源
 - 本项目规划文件：`task_plan.md`、`findings.md`、`progress.md`
-- GitHub 仓库：`https://github.com/2409324124/omsk-elevator`
+- GitHub 公开仓库：`https://github.com/2409324124/omsk-elevator`
 - 技能文件：`/home/miku/.codex/skills/planning-with-files-zh/SKILL.md`
 - 技能模板：`/home/miku/.codex/skills/planning-with-files-zh/templates/`
 - 可借鉴远端轮子：`2409324124/adaptive_psych_system` 的 Docker/Compose 和 session/progress 思路；不直接搬 PyTorch IRT。
