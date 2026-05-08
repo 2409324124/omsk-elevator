@@ -27,6 +27,7 @@
 - `engine/ending.py` 已实现 6 个 ending basin；CLI 在 MAX_STEPS 后会显示数值系统选出的结局。
 - `engine/ending.py` 已补 `ENDING_FLAG_BONUSES`，普通结局线性打分现在会纳入 `state.flags`。
 - `load_endings()` 会校验 6 个 ending basin 完整性，缺失、重复或未知 basin 会报错。
+- 已修正 ending 权重过度偏向 `missing_tourist` 的问题：保守路径 `1,1,2,2,2` 现在进入 `safe_exit`，高风险路径 `3,2,3,1,1` 仍进入 `missing_tourist`。
 
 ## 技术决策
 | 决策 | 理由 |
@@ -43,6 +44,7 @@
 | 结局系统优先于扩 scene 和模拟 | 没有 ending evaluator 时，basin_pressure 是死数据，模拟也无法验证结局分布 |
 | 结局系统只用 PlayerState 数值 | 防止 LLM 或叙事文本参与结局判定 |
 | ending flags bonus 不要求每个 flag 都配置 | 未配置 flag 代表暂无结局偏置，避免 scene bank 扩展时被 ending 层卡死 |
+| `missing_tourist` 普通分数需要低热度门槛感 | 硬触发仍是 `heat >= 7`，普通线性分数不能让 `heat=2` 的保守路线失踪 |
 
 ## 遇到的问题
 | 问题 | 解决方案 |

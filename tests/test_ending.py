@@ -10,7 +10,9 @@ from engine.ending import (
     compute_ending_scores,
     load_endings,
 )
+from engine.update import apply_choice
 from engine.state import PlayerState
+from scripts.run_cli_demo import load_scenes
 
 
 class EndingTests(unittest.TestCase):
@@ -34,8 +36,9 @@ class EndingTests(unittest.TestCase):
             ),
             "missing_tourist": PlayerState(
                 theta={"truth_seek": 2.0},
-                surveillance_heat=6.5,
-                relationships={"reporter_trust": 2.0, "major_suspicion": 1.0},
+                surveillance_heat=6.8,
+                relationships={"reporter_trust": 2.0, "major_suspicion": 2.0},
+                flags={"unauthorized_translation_to_reporter"},
             ),
             "collaborator": PlayerState(
                 theta={
@@ -87,6 +90,22 @@ class EndingTests(unittest.TestCase):
             path.write_text(payload, encoding="utf-8")
             with self.assertRaisesRegex(ValueError, "Missing ending basin"):
                 load_endings(path)
+
+    def test_conservative_cli_path_does_not_go_missing(self) -> None:
+        state = state_for_cli_choices([1, 1, 2, 2, 2])
+        self.assertEqual(choose_ending_basin(state), "safe_exit")
+
+    def test_high_risk_cli_path_still_goes_missing(self) -> None:
+        state = state_for_cli_choices([3, 2, 3, 1, 1])
+        self.assertEqual(choose_ending_basin(state), "missing_tourist")
+
+
+def state_for_cli_choices(choices: list[int]) -> PlayerState:
+    state = PlayerState()
+    scenes = load_scenes(Path("data/scenes"))
+    for scene, choice_number in zip(scenes, choices, strict=True):
+        apply_choice(state, scene.choices[choice_number - 1])
+    return state
 
 
 if __name__ == "__main__":

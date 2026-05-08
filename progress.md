@@ -175,6 +175,22 @@
   - `findings.md`
   - `progress.md`
 
+### 阶段 5.2：结局分布调权
+- **状态：** complete
+- 执行的操作：
+  - 复跑用户反馈的两条 CLI 路径。
+  - 确认原先 `missing_tourist` 普通线性热度权重过高，导致低热度保守路线也失踪。
+  - 降低 `missing_tourist` 的普通热度权重和基线分。
+  - 增强 `left_behavior_log` 对 `safe_exit` 的加成。
+  - 增强高危 flags 对 `missing_tourist` 的加成。
+  - 新增两条 CLI 路径回归测试。
+- 创建/修改的文件：
+  - `engine/ending.py`
+  - `tests/test_ending.py`
+  - `task_plan.md`
+  - `findings.md`
+  - `progress.md`
+
 ## 测试结果
 | 测试 | 输入 | 预期结果 | 实际结果 | 状态 |
 |------|------|---------|---------|------|
@@ -209,8 +225,10 @@
 | ending flags 语法校验 | `python3 -m py_compile engine/ending.py tests/test_ending.py` | 无错误 | 通过 | pass |
 | ending 相关语法校验 | `python3 -m py_compile engine/state.py engine/schema.py engine/update.py engine/router.py scripts/validate_scenes.py scripts/run_cli_demo.py` | 无错误 | 通过 | pass |
 | ending flags scene 校验 | `python3 scripts/validate_scenes.py data/scenes` | scene 校验通过 | `OK: validated 11 scene(s)` | pass |
-| ending flags 单元测试 | `docker compose run --rm omsk-vn-cli python -m unittest tests/test_ending.py` | 7 个测试通过 | `Ran 7 tests ... OK` | pass |
+| ending flags 单元测试 | `docker compose run --rm omsk-vn-cli python -m unittest tests/test_ending.py` | 测试通过 | `Ran 9 tests ... OK` | pass |
 | ending flags diff 检查 | `git diff --check` | 无空白错误 | 通过 | pass |
+| 保守路径结局回归 | `printf '1\n1\n2\n2\n2\n' \| docker compose run -T --rm omsk-vn-cli` | 不进入 `missing_tourist` | 输出 `结局：安全返程` | pass |
+| 高风险路径结局回归 | `printf '3\n2\n3\n1\n1\n' \| docker compose run -T --rm omsk-vn-cli` | 进入 `missing_tourist` | 输出 `结局：神秘失踪` | pass |
 
 ## 错误日志
 | 时间戳 | 错误 | 尝试次数 | 解决方案 |
@@ -226,7 +244,7 @@
 ## 五问重启检查
 | 问题 | 答案 |
 |------|------|
-| 我在哪里？ | 阶段 5.1 已完成：flags 已参与结局打分并有回归测试 |
+| 我在哪里？ | 阶段 5.2 已完成：结局分布调权和路径回归测试已完成 |
 | 我要去哪里？ | 下一阶段是扩展到 12 个关键选择和补模拟脚本 |
 | 目标是什么？ | 做成 NumPy 自适应 CLI 原型，后续扩展到 12 个关键选择和有限结局收束 |
 | 我学到了什么？ | 见 `findings.md` |

@@ -106,6 +106,14 @@
 - [x] 新增标准库 `unittest` 覆盖 hard BE、flags bonus、缺失 key 容错和 basin 可选中性
 - **状态：** complete
 
+### 阶段 5.2：结局分布调权
+- [x] 复现保守路线和高风险路线都进入 `missing_tourist` 的问题
+- [x] 降低普通线性分数中 `missing_tourist` 对低热度的敏感度
+- [x] 增强保守 flag 对 `safe_exit` 的推动
+- [x] 保留高风险 flag 对 `missing_tourist` 的推动
+- [x] 新增 CLI 路径回归测试
+- **状态：** complete
+
 ### 阶段 6：扩展到 12 个关键选择
 - [ ] 将 scene 扩展到 12 个关键选择
 - [ ] 至少包含 1 个延迟触发 BE
@@ -142,6 +150,7 @@
 | `hidden_constructs` 与 `THETA_KEYS` 对齐 | 避免 scene 拼写错误导致 router 静默按 0 处理构念 |
 | 结局由数值系统决定 | 遵守 LLM 不决定结局、不篡改状态的核心边界 |
 | flags 作为 ending bonus | flags 表示不可自然消失的事件痕迹，适合作为结局 basin 的附加分 |
+| 低热度保守路线不应失踪 | `missing_tourist` 应主要由高热度、高怀疑或高危 flag 推动，而不是低热度默认结局 |
 
 ## 遇到的错误
 | 错误 | 尝试次数 | 解决方案 |

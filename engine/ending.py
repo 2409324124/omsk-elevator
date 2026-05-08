@@ -67,18 +67,18 @@ ENDING_WEIGHTS: dict[str, tuple[float, ...]] = {
         -0.3,
     ),
     "missing_tourist": (
-        0.8,
+        0.5,
         -0.2,
         0.0,
-        -0.5,
+        -0.3,
         -0.2,
         0.3,
         0.0,
-        1.5,
+        0.45,
         0.1,
-        0.6,
+        0.4,
         -0.2,
-        0.8,
+        0.6,
     ),
     "collaborator": (
         -0.3,
@@ -125,9 +125,9 @@ ENDING_WEIGHTS: dict[str, tuple[float, ...]] = {
 }
 
 ENDING_BIASES: dict[str, float] = {
-    "safe_exit": 0.2,
+    "safe_exit": 0.5,
     "evidence_escape": 0.0,
-    "missing_tourist": -0.4,
+    "missing_tourist": -1.0,
     "collaborator": -0.1,
     "sacrifice_stay": -0.2,
     "underground_stranded": -0.3,
@@ -140,11 +140,11 @@ ENDING_FLAG_BONUSES: dict[str, dict[str, float]] = {
     },
     "unauthorized_translation_to_reporter": {
         "evidence_escape": 0.5,
-        "missing_tourist": 0.9,
+        "missing_tourist": 1.2,
     },
     "asked_about_underground": {
         "evidence_escape": 0.4,
-        "missing_tourist": 0.6,
+        "missing_tourist": 0.9,
         "underground_stranded": 0.4,
     },
     "took_translation_fragment": {
@@ -161,7 +161,7 @@ ENDING_FLAG_BONUSES: dict[str, dict[str, float]] = {
     },
     "copied_behavior_log": {
         "evidence_escape": 1.0,
-        "missing_tourist": 0.5,
+        "missing_tourist": 0.9,
         "underground_stranded": 0.4,
     },
     "softened_official_translation": {
@@ -173,7 +173,7 @@ ENDING_FLAG_BONUSES: dict[str, dict[str, float]] = {
         "collaborator": 0.8,
     },
     "left_behavior_log": {
-        "safe_exit": 0.5,
+        "safe_exit": 1.0,
     },
     "distracted_major_for_reporter": {
         "evidence_escape": 0.3,
