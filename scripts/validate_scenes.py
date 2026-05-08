@@ -4,19 +4,18 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from pathlib import Path
 from typing import Any
 
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
-VALID_EFFECTS = {
-    "truth_seek",
-    "risk_tolerance",
-    "authority_compliance",
-    "local_empathy",
-    "self_preservation",
-    "control_strategy",
-    "group_safety",
-}
+from engine.state import THETA_KEYS
+
+
+VALID_EFFECTS = set(THETA_KEYS)
 
 VALID_FORCE_NEXT_CONDITIONS = {
     "surveillance_heat_gte",
@@ -68,6 +67,16 @@ def validate_scenes(scenes: list[dict[str, Any]]) -> list[str]:
     for scene in scenes:
         scene_id = scene.get("id", "<missing scene id>")
         source = scene.get("_source_file", "<memory>")
+        hidden_constructs = scene.get("hidden_constructs", [])
+        if not isinstance(hidden_constructs, list):
+            errors.append(f"{source}:{scene_id}: hidden_constructs must be a list")
+        else:
+            for construct in hidden_constructs:
+                if construct not in THETA_KEYS:
+                    errors.append(
+                        f"{source}:{scene_id}: unknown hidden_construct '{construct}'"
+                    )
+
         choices = scene.get("choices", [])
         if not isinstance(choices, list):
             errors.append(f"{source}:{scene_id}: choices must be a list")
