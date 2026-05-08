@@ -4,7 +4,7 @@
 将 TNO 鄂木斯克同人视觉小说 Demo 从概念文档推进为可运行、可验证、可扩展的 NumPy 自适应 CLI 原型，并保持渐进式披露与状态驱动路由原则。
 
 ## 当前阶段
-阶段 4
+阶段 5
 
 ## 各阶段
 
@@ -34,8 +34,16 @@
 - [x] 创建 `task_plan.md`
 - [x] 创建 `findings.md`
 - [x] 创建 `progress.md`
-- [ ] 后续任务开始前先读取三个规划文件
-- **状态：** in_progress
+- [x] 后续任务开始前先读取三个规划文件
+- **状态：** complete
+
+### 阶段 4.1：GitHub 仓库发布
+- [x] 初始化本地 git 仓库
+- [x] 创建 `.gitignore`
+- [x] 提交当前 CLI 原型
+- [x] 创建 GitHub 私有仓库 `2409324124/omsk-elevator`
+- [x] 推送 `main` 分支并设置 upstream
+- **状态：** complete
 
 ### 阶段 5：结局系统
 - [ ] 创建 `engine/ending.py`

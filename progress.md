@@ -53,6 +53,20 @@
   - `findings.md`
   - `progress.md`
 
+### 阶段 4.1：GitHub 仓库发布
+- **状态：** complete
+- 执行的操作：
+  - 确认当前目录尚未初始化 git。
+  - 确认 `gh` 已登录账号 `2409324124`，并有 `repo` 权限。
+  - 创建 `.gitignore`，忽略 Python 缓存与本地环境文件。
+  - 初始化本地 git 仓库，提交当前项目。
+  - 创建 GitHub 私有仓库 `omsk-elevator`，推送 `main` 分支。
+- 创建/修改的文件：
+  - `.gitignore`
+  - `task_plan.md`
+  - `findings.md`
+  - `progress.md`
+
 ## 测试结果
 | 测试 | 输入 | 预期结果 | 实际结果 | 状态 |
 |------|------|---------|---------|------|
@@ -62,6 +76,7 @@
 | 容器 Scene 校验 | `docker compose run --rm omsk-vn-cli python scripts/validate_scenes.py` | 校验 5 个 scene | `OK: validated 5 scene(s)` | pass |
 | 容器语法校验 | `docker compose run --rm omsk-vn-cli python -m py_compile ...` | 无错误 | 通过 | pass |
 | CLI 冒烟 | `printf '1\n1\n1\n1\n1\n' \| docker compose run -T --rm omsk-vn-cli` | 跑完 5 步并进入地下 scene | 进入“外宾行为记录表”，输出状态摘要 | pass |
+| GitHub 发布 | `gh repo create omsk-elevator --private --source=. --remote=origin --push` | 创建私有仓库并推送 main | `https://github.com/2409324124/omsk-elevator` 已创建并跟踪 `origin/main` | pass |
 
 ## 错误日志
 | 时间戳 | 错误 | 尝试次数 | 解决方案 |
@@ -69,11 +84,12 @@
 | 2026-05-08 | `python: command not found` | 1 | 使用 `python3` |
 | 2026-05-08 | 宿主机 `ModuleNotFoundError: No module named 'numpy'` | 1 | 用 Docker 镜像安装 NumPy |
 | 2026-05-08 | CLI 入口 `ModuleNotFoundError: No module named 'engine'` | 1 | 在 CLI 入口加入项目根目录到 `sys.path` |
+| 2026-05-08 | 当前目录不是 git 仓库 | 1 | 执行 `git init -b main` |
 
 ## 五问重启检查
 | 问题 | 答案 |
 |------|------|
-| 我在哪里？ | 阶段 4 已完成：项目规划文件已创建 |
+| 我在哪里？ | 阶段 4.1 已完成：GitHub 私有仓库已创建并推送 |
 | 我要去哪里？ | 下一阶段是 `engine/ending.py` 结局系统 |
 | 目标是什么？ | 做成 NumPy 自适应 CLI 原型，后续扩展到 12 个关键选择和有限结局收束 |
 | 我学到了什么？ | 见 `findings.md` |
