@@ -20,6 +20,9 @@
 - 8values 仓库 `8values/8values.github.io` 标识为 MIT License；本项目只保存白名单文件 `questions.js` 与 `LICENSE` 的参考副本。
 - 8values 只用于参考 `econ/dipl/govt/scty` 四个价值轴，不用于现实政治画像或政治意识形态输出。
 - `scripts/extract_reference_constructs.py` 可输出 reference-only 摘要：IPIP 题数、映射构念、8values 轴权重统计；脚本会检查输出中不得包含 raw item text。
+- 交叉审阅结论为“有条件通过”：引擎骨架、参考层、CLI 入口可用，但还不是可发布最小 Demo。
+- 交叉审阅确认阻塞项：缺少 `engine/ending.py`、缺少 `data/scenes/endings.json`、scene 数量仅 5 个且低于验收要求。
+- 交叉审阅确认高优先级修复项：`router.py` 里 `_unresolved_thread_score` 硬编码 flag，`validate_scenes.py` 未校验 `hidden_constructs`。
 
 ## 技术决策
 | 决策 | 理由 |
@@ -33,6 +36,7 @@
 | IPIP-NEO-120 只作构念参考 | 避免凭空编题库，同时避免把公开量表原题直接变成游戏文本 |
 | 8values 只作价值轴参考 | 后续把政治价值冲突改造成鄂木斯克场景压力测试，不输出现实政治标签 |
 | 提取脚本只输出元数据和统计 | 防止公开题项直接流入游戏 scene 或玩家可见文本 |
+| 结局系统优先于扩 scene 和模拟 | 没有 ending evaluator 时，basin_pressure 是死数据，模拟也无法验证结局分布 |
 
 ## 遇到的问题
 | 问题 | 解决方案 |
@@ -54,6 +58,7 @@
 - 8values LICENSE：`https://github.com/8values/8values.github.io/blob/master/LICENSE`
 - 8values questions.js：`https://github.com/8values/8values.github.io/blob/master/questions.js`
 - Reference-only 提取脚本：`scripts/extract_reference_constructs.py`
+- 交叉审阅报告：`docs/reviews/cross_review_2026-05-08.md`
 - 技能文件：`/home/miku/.codex/skills/planning-with-files-zh/SKILL.md`
 - 技能模板：`/home/miku/.codex/skills/planning-with-files-zh/templates/`
 - 可借鉴远端轮子：`2409324124/adaptive_psych_system` 的 Docker/Compose 和 session/progress 思路；不直接搬 PyTorch IRT。

@@ -119,6 +119,19 @@
   - `findings.md`
   - `progress.md`
 
+### 阶段 4.5：交叉审阅同步
+- **状态：** complete
+- 执行的操作：
+  - 读取 `docs/reviews/cross_review_2026-05-08.md`。
+  - 记录审阅结论：“有条件通过”。
+  - 记录阻塞项：缺少 `engine/ending.py`、缺少 `data/scenes/endings.json`、scene 数量不足。
+  - 记录修复建议：外置或 tag 化 router 的 unresolved thread 权重，补 `hidden_constructs` 校验。
+  - 将后续优先级明确为先补结局系统。
+- 创建/修改的文件：
+  - `task_plan.md`
+  - `findings.md`
+  - `progress.md`
+
 ## 测试结果
 | 测试 | 输入 | 预期结果 | 实际结果 | 状态 |
 |------|------|---------|---------|------|
@@ -141,6 +154,7 @@
 | reference 脚本语法校验 | `python3 -m py_compile scripts/extract_reference_constructs.py` | 无错误 | 通过 | pass |
 | reference 脚本运行 | `python3 scripts/extract_reference_constructs.py` | 输出不含原题文本的 JSON 摘要 | 输出 IPIP 120、8values 70、四轴权重统计和映射构念 | pass |
 | validate_scenes 语法校验 | `python3 -m py_compile scripts/validate_scenes.py` | 无错误 | 通过 | pass |
+| 交叉审阅读取 | `sed -n '1,260p' docs/reviews/cross_review_2026-05-08.md` | 读取审阅报告 | 已读取总体结论、阻塞项、P0/P1/P2/P3 和 Docker 验证结果 | pass |
 
 ## 错误日志
 | 时间戳 | 错误 | 尝试次数 | 解决方案 |
@@ -155,7 +169,7 @@
 ## 五问重启检查
 | 问题 | 答案 |
 |------|------|
-| 我在哪里？ | 阶段 4.4 已完成：reference-only 提取脚本已创建并准备提交 |
+| 我在哪里？ | 阶段 4.5 已完成：交叉审阅结论已同步到规划文件 |
 | 我要去哪里？ | 下一阶段是 `engine/ending.py` 结局系统 |
 | 目标是什么？ | 做成 NumPy 自适应 CLI 原型，后续扩展到 12 个关键选择和有限结局收束 |
 | 我学到了什么？ | 见 `findings.md` |

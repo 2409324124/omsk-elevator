@@ -74,10 +74,20 @@
 - [x] 提交并推送 reference 更新到 GitHub
 - **状态：** complete
 
+### 阶段 4.5：交叉审阅同步
+- [x] 读取 `docs/reviews/cross_review_2026-05-08.md`
+- [x] 记录总体结论：有条件通过
+- [x] 记录阻塞项：缺少 `engine/ending.py`、`data/scenes/endings.json`、scene 数量不足
+- [x] 记录高优先级修复项：router flag 硬编码、validator 未校验 `hidden_constructs`
+- [x] 将下一步优先级调整为先补结局系统
+- **状态：** complete
+
 ### 阶段 5：结局系统
 - [ ] 创建 `engine/ending.py`
+- [ ] 创建 `data/scenes/endings.json`
 - [ ] 用 NumPy 实现 ending basin 线性打分
 - [ ] 支持硬触发 BE 与 softmax 低温收束
+- [ ] CLI 在 MAX_STEPS 后调用 ending evaluator 显示结局文本
 - [ ] 添加最小验证场景或测试入口
 - **状态：** pending
 
@@ -99,6 +109,7 @@
 1. 结局系统第一版是否只做 5 个结局 basin，还是直接包含文档中的 6 个方向？
 2. scene 数据是否继续集中在 `demo_intro.json`，还是下一阶段拆分为 `act1_surface.json`、`act2_b1.json` 等文件？
 3. CLI 是否需要非交互模式参数，方便后续自动测试与模拟复用？
+4. `_unresolved_thread_score` 的 flag 权重映射是先外置到 JSON，还是先降级为纯 tag 驱动？
 
 ## 已做决策
 | 决策 | 理由 |
@@ -112,6 +123,7 @@
 | 新增参考题库层，不写入 scene | 用户明确要求不要凭空编心理题库，也不要把原题直接写入游戏 |
 | 8values 只作价值轴参考 | 用户明确要求不要做现实政治倾向测评，也不要复制题目进 scene |
 | reference 提取脚本不输出原题文本 | 参考题库只能辅助构念设计，不能把量表题目转成游戏内容 |
+| 先补 `engine/ending.py` | 交叉审阅指出结局系统是当前阻塞“过程随机 → 结局收束”的最大缺口 |
 
 ## 遇到的错误
 | 错误 | 尝试次数 | 解决方案 |
