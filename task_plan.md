@@ -114,6 +114,21 @@
 - [x] 新增 CLI 路径回归测试
 - **状态：** complete
 
+### 阶段 5.3：CLI 路径枚举诊断
+- [x] 新增 `scripts/enumerate_cli_paths.py`
+- [x] 默认枚举当前 CLI 5 步、固定 router argmax 下的全部选项组合
+- [x] 输出 ending distribution、代表路径、最终 heat/evidence/flags 和最高 ending score
+- [x] 支持 `--scene-mode all` 作为后续更宽的 scene 分支诊断入口
+- **状态：** complete
+
+### 阶段 5.4：牺牲留下可达性修复
+- [x] 新增地下 scene `b2_elevator_capacity_01`
+- [x] 使用既有地下相关 flag 作为前置条件
+- [x] 新增 `stayed_to_cover_group` flag bonus，推动但不锁死 `sacrifice_stay`
+- [x] 更新 ending 回归测试，确认 `sacrifice_stay` 在当前 5 步路径可达
+- [x] 枚举确认 `sacrifice_stay > 0`，且最大结局占比未超过 60%
+- **状态：** complete
+
 ### 阶段 6：扩展到 12 个关键选择
 - [ ] 将 scene 扩展到 12 个关键选择
 - [ ] 至少包含 1 个延迟触发 BE
@@ -151,6 +166,8 @@
 | 结局由数值系统决定 | 遵守 LLM 不决定结局、不篡改状态的核心边界 |
 | flags 作为 ending bonus | flags 表示不可自然消失的事件痕迹，适合作为结局 basin 的附加分 |
 | 低热度保守路线不应失踪 | `missing_tourist` 应主要由高热度、高怀疑或高危 flag 推动，而不是低热度默认结局 |
+| 先用枚举脚本看分布 | 手玩几条路径容易误判结局分布，当前阶段用脚本遍历全部选项组合更直接 |
+| 通过新增 scene 修复 `sacrifice_stay` | 该结局缺的是“主动留下掩护他人”的行为入口，不应只靠 ending 权重硬拉 |
 
 ## 遇到的错误
 | 错误 | 尝试次数 | 解决方案 |

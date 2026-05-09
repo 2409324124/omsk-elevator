@@ -229,6 +229,12 @@
 | ending flags diff 检查 | `git diff --check` | 无空白错误 | 通过 | pass |
 | 保守路径结局回归 | `printf '1\n1\n2\n2\n2\n' \| docker compose run -T --rm omsk-vn-cli` | 不进入 `missing_tourist` | 输出 `结局：安全返程` | pass |
 | 高风险路径结局回归 | `printf '3\n2\n3\n1\n1\n' \| docker compose run -T --rm omsk-vn-cli` | 进入 `missing_tourist` | 输出 `结局：神秘失踪` | pass |
+| 路径枚举脚本编译 | `python3 -m py_compile scripts/enumerate_cli_paths.py` | 无错误 | 通过 | pass |
+| 路径枚举脚本运行 | `docker compose run --rm omsk-vn-cli python scripts/enumerate_cli_paths.py --samples 2` | 输出当前 CLI 5 步结局分布 | 枚举 243 条路径，覆盖 5 个结局 basin | pass |
+| 牺牲 scene 后数据校验 | `python3 scripts/validate_scenes.py data/scenes` | scene 校验通过 | `OK: validated 12 scene(s)` | pass |
+| 牺牲 scene 后语法校验 | `python3 -m py_compile engine/ending.py scripts/enumerate_cli_paths.py` | 无错误 | 通过 | pass |
+| 牺牲 scene 后路径枚举 | `docker compose run --rm omsk-vn-cli python scripts/enumerate_cli_paths.py --samples 1` | `sacrifice_stay > 0` 且不塌缩 | `sacrifice_stay 56/306`，最大结局 `underground_stranded 42.5%` | pass |
+| 牺牲 scene 后 ending 单测 | `docker compose run --rm omsk-vn-cli python -m unittest tests/test_ending.py` | 测试通过 | `Ran 10 tests ... OK` | pass |
 
 ## 错误日志
 | 时间戳 | 错误 | 尝试次数 | 解决方案 |
@@ -244,11 +250,11 @@
 ## 五问重启检查
 | 问题 | 答案 |
 |------|------|
-| 我在哪里？ | 阶段 5.2 已完成：结局分布调权和路径回归测试已完成 |
-| 我要去哪里？ | 下一阶段是扩展到 12 个关键选择和补模拟脚本 |
+| 我在哪里？ | 阶段 5.4 已完成：`sacrifice_stay` 已通过新增地下 scene 变为可达 |
+| 我要去哪里？ | 下一阶段是继续扩展到 12 个关键选择，并观察 ending 分布是否需要微调 |
 | 目标是什么？ | 做成 NumPy 自适应 CLI 原型，后续扩展到 12 个关键选择和有限结局收束 |
 | 我学到了什么？ | 见 `findings.md` |
-| 我做了什么？ | 见上方阶段记录 |
+| 我做了什么？ | 见上方阶段记录；新增 `b2_elevator_capacity_01` 和 `stayed_to_cover_group` |
 
 ---
 *每个阶段完成后或遇到错误时更新此文件*

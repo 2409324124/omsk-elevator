@@ -12,7 +12,8 @@ from engine.ending import (
 )
 from engine.update import apply_choice
 from engine.state import PlayerState
-from scripts.run_cli_demo import load_scenes
+from scripts.enumerate_cli_paths import next_scene_candidates
+from scripts.run_cli_demo import forced_next_scene_id, load_scenes
 
 
 class EndingTests(unittest.TestCase):
@@ -92,19 +93,31 @@ class EndingTests(unittest.TestCase):
                 load_endings(path)
 
     def test_conservative_cli_path_does_not_go_missing(self) -> None:
-        state = state_for_cli_choices([1, 1, 2, 2, 2])
+        state = state_for_cli_choices([1, 2, 2, 2, 4])
         self.assertEqual(choose_ending_basin(state), "safe_exit")
 
     def test_high_risk_cli_path_still_goes_missing(self) -> None:
         state = state_for_cli_choices([3, 2, 3, 1, 1])
         self.assertEqual(choose_ending_basin(state), "missing_tourist")
 
+    def test_sacrifice_cli_path_is_reachable(self) -> None:
+        state = state_for_cli_choices([1, 1, 1, 1, 3])
+        self.assertEqual(choose_ending_basin(state), "sacrifice_stay")
+
 
 def state_for_cli_choices(choices: list[int]) -> PlayerState:
     state = PlayerState()
     scenes = load_scenes(Path("data/scenes"))
-    for scene, choice_number in zip(scenes, choices, strict=True):
-        apply_choice(state, scene.choices[choice_number - 1])
+    forced_scene_id = None
+    for choice_number in choices:
+        candidates = next_scene_candidates(scenes, state, forced_scene_id, "argmax")
+        if not candidates:
+            raise AssertionError("choice path ended before all choices were applied")
+        scene = candidates[0]
+        state.visited_scenes.append(scene.id)
+        choice = scene.choices[choice_number - 1]
+        apply_choice(state, choice)
+        forced_scene_id = forced_next_scene_id(choice, state)
     return state
 
 

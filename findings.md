@@ -28,6 +28,9 @@
 - `engine/ending.py` 已补 `ENDING_FLAG_BONUSES`，普通结局线性打分现在会纳入 `state.flags`。
 - `load_endings()` 会校验 6 个 ending basin 完整性，缺失、重复或未知 basin 会报错。
 - 已修正 ending 权重过度偏向 `missing_tourist` 的问题：保守路径 `1,1,2,2,2` 现在进入 `safe_exit`，高风险路径 `3,2,3,1,1` 仍进入 `missing_tourist`。
+- `scripts/enumerate_cli_paths.py` 可遍历当前 CLI 5 步选择组合，并输出结局分布与代表路径，便于检查“是否总进同一结局”。
+- `sacrifice_stay` 不可达的主因是 scene bank 没有 `local_empathy` 正向入口，也没有“主动留下掩护他人”的 flag；已通过新增 `b2_elevator_capacity_01` 和 `stayed_to_cover_group` 修复。
+- 新增 scene 后，当前 5 步枚举中 `b2_elevator_capacity_01` 可被访问，`sacrifice_stay` 分布为 56/306。
 
 ## 技术决策
 | 决策 | 理由 |
@@ -45,6 +48,8 @@
 | 结局系统只用 PlayerState 数值 | 防止 LLM 或叙事文本参与结局判定 |
 | ending flags bonus 不要求每个 flag 都配置 | 未配置 flag 代表暂无结局偏置，避免 scene bank 扩展时被 ending 层卡死 |
 | `missing_tourist` 普通分数需要低热度门槛感 | 硬触发仍是 `heat >= 7`，普通线性分数不能让 `heat=2` 的保守路线失踪 |
+| 路径枚举默认使用 router argmax | 交互 CLI 有固定随机种子但仍会受抽样影响；诊断分布时先使用确定性下一 scene，减少噪声 |
+| `sacrifice_stay` 用 scene 修复优先于权重修复 | 结局语义需要玩家做出留下/拖延/掩护的明确行为，单纯调权会让结局缺少叙事证据 |
 
 ## 遇到的问题
 | 问题 | 解决方案 |
@@ -70,6 +75,8 @@
 - 结局系统：`engine/ending.py`
 - 结局数据：`data/scenes/endings.json`
 - 结局测试：`tests/test_ending.py`
+- CLI 路径枚举脚本：`scripts/enumerate_cli_paths.py`
+- 牺牲留下触发 scene：`data/scenes/demo_intro.json` 中 `b2_elevator_capacity_01`
 - 技能文件：`/home/miku/.codex/skills/planning-with-files-zh/SKILL.md`
 - 技能模板：`/home/miku/.codex/skills/planning-with-files-zh/templates/`
 - 可借鉴远端轮子：`2409324124/adaptive_psych_system` 的 Docker/Compose 和 session/progress 思路；不直接搬 PyTorch IRT。

@@ -179,6 +179,11 @@ ENDING_FLAG_BONUSES: dict[str, dict[str, float]] = {
         "evidence_escape": 0.3,
         "missing_tourist": 0.7,
     },
+    "stayed_to_cover_group": {
+        "sacrifice_stay": 1.5,
+        "safe_exit": 0.2,
+        "underground_stranded": 0.2,
+    },
 }
 
 

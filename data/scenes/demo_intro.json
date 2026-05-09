@@ -180,5 +180,54 @@
       }
     ],
     "tags": ["underground", "monitoring", "evidence"]
+  },
+  {
+    "id": "b2_elevator_capacity_01",
+    "act": 2,
+    "location": "B2_elevator",
+    "phase": "underground_router",
+    "title": "只上一趟",
+    "visible_text": "备用灯把电梯门照成一条窄缝。维修员说下一次上行只能维持一趟，娜塔莉娅的手停在名单上。美国团已经挤到门边，本地协助者还站在走廊里，像在等别人替他们决定。",
+    "hidden_constructs": ["local_empathy", "group_safety", "self_preservation", "risk_tolerance"],
+    "preconditions": {
+      "min_choice_index": 4,
+      "required_flags_any": ["saw_b1_button", "noted_b1_button", "asked_about_underground", "copied_behavior_log"]
+    },
+    "choices": [
+      {
+        "id": "take_americans_only",
+        "text": "只带美国团走。",
+        "effects": {"group_safety": 0.6, "self_preservation": 0.5, "local_empathy": -0.4},
+        "basin_pressure": {"safe_exit": 1.0, "collaborator": 0.5}
+      },
+      {
+        "id": "force_locals_into_elevator",
+        "text": "强行带本地人一起走。",
+        "effects": {"local_empathy": 0.8, "risk_tolerance": 0.6, "group_safety": -0.2},
+        "heat_delta": 1.0,
+        "basin_pressure": {"evidence_escape": 0.7, "underground_stranded": 0.7}
+      },
+      {
+        "id": "stay_to_cover_group",
+        "text": "自己留下，让其他人上去。",
+        "effects": {
+          "local_empathy": 1.0,
+          "group_safety": 1.0,
+          "self_preservation": -1.2,
+          "risk_tolerance": 0.4
+        },
+        "heat_delta": 0.5,
+        "flags_add": ["stayed_to_cover_group"],
+        "basin_pressure": {"sacrifice_stay": 3.0}
+      },
+      {
+        "id": "trade_evidence_for_exit",
+        "text": "交出证据，换取全员离开。",
+        "effects": {"authority_compliance": 0.5, "self_preservation": 0.4, "truth_seek": -0.4},
+        "evidence_delta": -1.0,
+        "basin_pressure": {"safe_exit": 0.8, "collaborator": 0.8}
+      }
+    ],
+    "tags": ["underground", "elevator", "monitoring", "evidence", "sacrifice"]
   }
 ]
